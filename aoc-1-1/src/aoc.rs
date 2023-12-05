@@ -41,7 +41,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_aoc() {
+    fn test_aoc_1_1() {
         let test_data = r#"
 1abc2
 pqr3stu8vwx

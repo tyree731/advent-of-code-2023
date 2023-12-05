@@ -72,7 +72,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_aoc() {
+    fn test_aoc_1_2() {
         let test_data = r#"
 two1nine
 eightwothree
