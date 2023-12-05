@@ -1,6 +1,5 @@
 mod aoc;
-use aoc::aoc_1_1;
-
+use aoc::aoc_1_2;
 use std::io::{stdin, BufRead};
 
 fn read_stdin_until_eof() -> Result<Vec<String>, String> {
@@ -26,7 +25,7 @@ fn main() {
     let lines = read_stdin_until_eof();
     match lines {
         Ok(lines) => {
-            println!("{}", aoc_1_1(lines));
+            println!("{}", aoc_1_2(lines));
         },
         Err(error) => {
             eprintln!("error: {}", error);

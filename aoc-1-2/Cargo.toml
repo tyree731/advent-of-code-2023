@@ -1,0 +1,9 @@
+[package]
+name = "aoc-1-2"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+lazy_static = "1.4.0"
+maplit = "1.0.2"
+regex = "1.10.2"

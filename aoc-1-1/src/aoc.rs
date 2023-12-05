@@ -2,7 +2,7 @@ fn str_index_to_i32(str: &str, index: usize) -> i32 {
     return str.chars().nth(index).unwrap() as i32 - '0' as i32;
 }
 
-pub fn aoc(lines: Vec<String>) -> i32 {
+pub fn aoc_1_1(lines: Vec<String>) -> i32 {
     if lines.is_empty() {
         return 0;
     }
@@ -51,7 +51,7 @@ treb7uchet
         let lines: Vec<String> = test_data.lines()
                                            .map(|line| line.to_string())
                                            .collect();
-        let result = aoc(lines);
+        let result = aoc_1_1(lines);
         assert_eq!(result, 142, "aoc-1-1 example did not return expected result");
     }
 }
