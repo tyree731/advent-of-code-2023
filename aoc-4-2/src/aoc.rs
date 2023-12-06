@@ -33,31 +33,27 @@ fn parse_game(line: &String) -> Result<Game, String> {
     }
 }
 
-fn score_game(game: Game) -> u32 {
+fn score_game(game: &Game) -> u32 {
     let mut winning_numbers_set: HashSet<u32> = HashSet::new();
-    for winning_number in game.winning_numbers {
-        winning_numbers_set.insert(winning_number);
+    for winning_number in &game.winning_numbers {
+        winning_numbers_set.insert(*winning_number);
     }
 
     let mut card_numbers_set: HashSet<u32> = HashSet::new();
-    for card_number in game.card_numbers {
-        card_numbers_set.insert(card_number);
+    for card_number in &game.card_numbers {
+        card_numbers_set.insert(*card_number);
     }
 
-    let match_count = winning_numbers_set.intersection(&card_numbers_set).count();
-    if match_count == 0 {
-        return 0;
-    }
-    return 1 << (match_count - 1);
+    return winning_numbers_set.intersection(&card_numbers_set).count() as u32;
 }
 
-pub fn aoc_4_1(lines: Vec<String>) -> u32 {
+pub fn aoc_4_2(lines: Vec<String>) -> u32 {
     let fixed_lines = remove_empty_lines(lines);
-    let mut score_sum: u32 = 0;
+    let mut games: Vec<Game> = Vec::with_capacity(fixed_lines.len());
     for line in fixed_lines {
         match parse_game(&line) {
             Ok(game) => {
-                score_sum += score_game(game);
+                games.push(game);
             },
             Err(error) => {
                 eprintln!("warning: line didn't game card pattern, skipping: line={} error={}", line, error);
@@ -65,7 +61,32 @@ pub fn aoc_4_1(lines: Vec<String>) -> u32 {
             }
         }
     }
-    return score_sum;
+    if games.is_empty() {
+        return 0;
+    }
+
+    // calculate scores and prepare card count
+    let score_counts: Vec<u32> = games.iter().map(|game| {
+        return score_game(game);
+    }).collect();
+    let mut card_counts: Vec<u32> = vec![1; score_counts.len()];
+
+    // compute card counts
+    for i in 0..card_counts.len() {
+        let score: usize = score_counts[i] as usize;
+        if score == 0 {
+            continue;
+        }
+        let card_count: u32 = card_counts[i];
+        for j in i+1..i+score+1 {
+            if j >= card_counts.len() {
+                break;
+            }
+            card_counts[j] += card_count;
+        }
+    }
+
+    return card_counts.iter().sum();
 }
 
 #[cfg(test)]
@@ -73,7 +94,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_aoc_4_1() {
+    fn test_aoc_4_2() {
         let test_data = r#"
 Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
 Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19
@@ -85,7 +106,7 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11
         let lines: Vec<String> = test_data.lines()
                                            .map(|line| line.to_string())
                                            .collect();
-        let result = aoc_4_1(lines);
-        assert_eq!(result, 13, "aoc-4-1 example did not return expected result");
+        let result = aoc_4_2(lines);
+        assert_eq!(result, 30, "aoc-4-1 example did not return expected result");
     }
 }
